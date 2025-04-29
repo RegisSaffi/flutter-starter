@@ -1,3 +1,4 @@
+import 'package:checkme/ui/screens/todos_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,7 +17,7 @@ class LoginScreen extends StatelessWidget {
             children: [
               // Image.asset("assets/avatar.jpg", height: 100, width: 100),
               CircleAvatar(
-                backgroundImage: AssetImage("assets/avatar .jpg"),
+                backgroundImage: AssetImage("assets/avatar.jpg"),
                 radius: 50,
               ),
               TextField(
@@ -34,7 +35,14 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              FilledButton(onPressed: () {}, child: Text("Login")),
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => TodosScreen()),
+                  );
+                },
+                child: Text("Login"),
+              ),
             ],
           ),
         ),
