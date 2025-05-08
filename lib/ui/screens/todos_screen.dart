@@ -15,8 +15,31 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
   int viewType = 0;
   TextEditingController taskController = TextEditingController();
 
-  test() {
-    // Task task = Task(id: 1, todo: "", completed: true, userId: 1000);
+  deleteTask(Task task) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Delete task"),
+          content: Text("Are you sure bruv???????"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                ref.read(tasksListProvider.notifier).deleteTask(task);
+                Navigator.of(context).pop();
+              },
+              child: Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -162,6 +185,24 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
                                   .read(tasksListProvider.notifier)
                                   .completeTask(task);
                             },
+                          ),
+                        ),
+
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: PopupMenuButton(
+                            itemBuilder: (context) {
+                              return [
+                                PopupMenuItem(child: Text("Delete"), value: 0),
+                              ];
+                            },
+                            onSelected: (value) {
+                              if (value == 0) {
+                                deleteTask(task);
+                              }
+                            },
+                            icon: Icon(Icons.more_vert),
                           ),
                         ),
                       ],

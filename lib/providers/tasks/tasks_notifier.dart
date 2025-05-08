@@ -18,4 +18,11 @@ class TasksNotifier extends Notifier<List<Task>> {
     allTasks[index] = task;
     state = allTasks;
   }
+
+  void deleteTask(Task task) {
+    var allTasks = [...state];
+    var index = allTasks.indexOf(task);
+    allTasks.removeAt(index);
+    state = allTasks;
+  }
 }
