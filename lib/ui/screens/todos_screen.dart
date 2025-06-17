@@ -15,6 +15,14 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
   int viewType = 0;
   TextEditingController taskController = TextEditingController();
 
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(tasksListProvider.notifier).loadTasks();
+    });
+    super.initState();
+  }
+
   deleteTask(Task task) {
     showDialog(
       context: context,
@@ -45,7 +53,8 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
   @override
   Widget build(BuildContext context) {
     var theme = ref.watch(themeProvider);
-    var tasks = ref.watch(tasksListProvider);
+    var tasksState = ref.watch(tasksListProvider);
+    var tasks = tasksState.value ?? [];
 
     return Scaffold(
       appBar: AppBar(
@@ -69,12 +78,13 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: TextField(
+                  child: TextFormField(
                     controller: taskController,
                     decoration: InputDecoration(
+                      isDense: true,
                       hintText: "What's on your mind?",
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(55),
                       ),
                       suffix: GestureDetector(
                         onTap: () {
@@ -82,7 +92,9 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
                           ref.read(tasksListProvider.notifier).addTask(task);
                           taskController.clear();
                         },
-                        child: Icon(Icons.send_rounded),
+                        child: Column(
+                          children: [Icon(Icons.send_rounded, size: 20)],
+                        ),
                       ),
                     ),
                   ),
@@ -131,7 +143,11 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
         ),
       ),
       body:
-          viewType == 0
+          tasksState.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : tasksState.hasError
+              ? Center(child: Text(tasksState.error.toString()))
+              : viewType == 0
               ? ListView.separated(
                 itemBuilder: (BuildContext context, int index) {
                   Task task = tasks[index];

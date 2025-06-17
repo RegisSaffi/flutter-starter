@@ -14,4 +14,13 @@ class Task {
   factory Task.fromTodo(String todo) {
     return Task(id: 1, todo: todo, completed: false, userId: 0);
   }
+
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
+      id: json['id'],
+      todo: json['todo'],
+      completed: json['completed'],
+      userId: json['userId'],
+    );
+  }
 }
