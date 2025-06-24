@@ -1,5 +1,5 @@
 import 'package:checkme/providers/theme.dart';
-import 'package:checkme/ui/screens/login_screen.dart';
+import 'package:checkme/ui/screens/splast_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,7 +21,7 @@ class CheckMeApp extends ConsumerWidget {
       ),
       darkTheme: ThemeData.dark(),
       themeMode: theme,
-      home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

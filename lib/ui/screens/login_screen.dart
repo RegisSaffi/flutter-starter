@@ -14,21 +14,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   var controller = TextEditingController();
 
   @override
-  void initState() {
-    checkLogin();
-    super.initState();
-  }
-
-  checkLogin() async {
-    var loggedIn = await ref.read(storageProvider.notifier).checkLoginInfo();
-    if (loggedIn) {
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (context) => TodosScreen()));
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Login")),

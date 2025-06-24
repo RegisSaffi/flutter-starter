@@ -1,6 +1,8 @@
 import 'package:checkme/models/task.dart';
+import 'package:checkme/providers/storage/storage_notifier.dart';
 import 'package:checkme/providers/tasks/providers.dart';
 import 'package:checkme/providers/theme.dart';
+import 'package:checkme/ui/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -59,15 +61,27 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("CheckMe"),
+        leading: IconButton(
+          onPressed: () {
+            ref.read(themeProvider.notifier).state =
+                theme == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+          },
+          icon: Icon(
+            theme == ThemeMode.dark ? Icons.brightness_7 : Icons.brightness_4,
+          ),
+        ),
         actions: [
-          IconButton(
-            onPressed: () {
-              ref.read(themeProvider.notifier).state =
-                  theme == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [PopupMenuItem(child: Text("Logout"), value: 0)];
             },
-            icon: Icon(
-              theme == ThemeMode.dark ? Icons.brightness_7 : Icons.brightness_4,
-            ),
+            icon: Icon(Icons.more_vert),
+            onSelected: (value) {
+              ref.read(storageProvider.notifier).logout();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
+            },
           ),
         ],
         bottom: PreferredSize(
