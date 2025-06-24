@@ -1,8 +1,33 @@
+import 'package:checkme/providers/storage/storage_notifier.dart';
 import 'package:checkme/ui/screens/todos_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  var controller = TextEditingController();
+
+  @override
+  void initState() {
+    checkLogin();
+    super.initState();
+  }
+
+  checkLogin() async {
+    var loggedIn = await ref.read(storageProvider.notifier).checkLoginInfo();
+    if (loggedIn) {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (context) => TodosScreen()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +46,7 @@ class LoginScreen extends StatelessWidget {
                 radius: 50,
               ),
               TextField(
+                controller: controller,
                 decoration: InputDecoration(
                   hintText: "Your email",
                   labelText: "Email",
@@ -37,6 +63,9 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: 20),
               FilledButton(
                 onPressed: () {
+                  ref
+                      .read(storageProvider.notifier)
+                      .saveLoginInfo(controller.text);
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => TodosScreen()),
                   );
